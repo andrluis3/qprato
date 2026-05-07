@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as IndexRouteImport } from './routes/index'
@@ -18,6 +19,11 @@ import { Route as RestauranteSlugRouteImport } from './routes/restaurante.$slug'
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritosRoute = FavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CadastroRoute = CadastroRouteImport.update({
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/buscar': typeof BuscarRoute
   '/cadastro': typeof CadastroRoute
+  '/favoritos': typeof FavoritosRoute
   '/login': typeof LoginRoute
   '/restaurante/$slug': typeof RestauranteSlugRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/buscar': typeof BuscarRoute
   '/cadastro': typeof CadastroRoute
+  '/favoritos': typeof FavoritosRoute
   '/login': typeof LoginRoute
   '/restaurante/$slug': typeof RestauranteSlugRoute
 }
@@ -60,19 +68,33 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/buscar': typeof BuscarRoute
   '/cadastro': typeof CadastroRoute
+  '/favoritos': typeof FavoritosRoute
   '/login': typeof LoginRoute
   '/restaurante/$slug': typeof RestauranteSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/buscar' | '/cadastro' | '/login' | '/restaurante/$slug'
+  fullPaths:
+    | '/'
+    | '/buscar'
+    | '/cadastro'
+    | '/favoritos'
+    | '/login'
+    | '/restaurante/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/buscar' | '/cadastro' | '/login' | '/restaurante/$slug'
+  to:
+    | '/'
+    | '/buscar'
+    | '/cadastro'
+    | '/favoritos'
+    | '/login'
+    | '/restaurante/$slug'
   id:
     | '__root__'
     | '/'
     | '/buscar'
     | '/cadastro'
+    | '/favoritos'
     | '/login'
     | '/restaurante/$slug'
   fileRoutesById: FileRoutesById
@@ -81,6 +103,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BuscarRoute: typeof BuscarRoute
   CadastroRoute: typeof CadastroRoute
+  FavoritosRoute: typeof FavoritosRoute
   LoginRoute: typeof LoginRoute
   RestauranteSlugRoute: typeof RestauranteSlugRoute
 }
@@ -92,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favoritos': {
+      id: '/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof FavoritosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cadastro': {
@@ -129,6 +159,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BuscarRoute: BuscarRoute,
   CadastroRoute: CadastroRoute,
+  FavoritosRoute: FavoritosRoute,
   LoginRoute: LoginRoute,
   RestauranteSlugRoute: RestauranteSlugRoute,
 }
