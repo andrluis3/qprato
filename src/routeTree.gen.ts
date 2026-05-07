@@ -15,8 +15,18 @@ import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as CadastrarRestauranteRouteImport } from './routes/cadastrar-restaurante'
 import { Route as BuscarRouteImport } from './routes/buscar'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RestauranteSlugRouteImport } from './routes/restaurante.$slug'
+import { Route as PainelPromocoesRouteImport } from './routes/painel.promocoes'
+import { Route as PainelPerfilRouteImport } from './routes/painel.perfil'
+import { Route as PainelFinanceiroRouteImport } from './routes/painel.financeiro'
+import { Route as PainelDestaqueRouteImport } from './routes/painel.destaque'
+import { Route as PainelCardapioRouteImport } from './routes/painel.cardapio'
+import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
+import { Route as AdminRestaurantesRouteImport } from './routes/admin.restaurantes'
+import { Route as AdminFinanceiroRouteImport } from './routes/admin.financeiro'
+import { Route as AdminDestaquesRouteImport } from './routes/admin.destaques'
 
 const PainelRoute = PainelRouteImport.update({
   id: '/painel',
@@ -48,6 +58,11 @@ const BuscarRoute = BuscarRouteImport.update({
   path: '/buscar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -58,79 +73,185 @@ const RestauranteSlugRoute = RestauranteSlugRouteImport.update({
   path: '/restaurante/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PainelPromocoesRoute = PainelPromocoesRouteImport.update({
+  id: '/promocoes',
+  path: '/promocoes',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelPerfilRoute = PainelPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelFinanceiroRoute = PainelFinanceiroRouteImport.update({
+  id: '/financeiro',
+  path: '/financeiro',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelDestaqueRoute = PainelDestaqueRouteImport.update({
+  id: '/destaque',
+  path: '/destaque',
+  getParentRoute: () => PainelRoute,
+} as any)
+const PainelCardapioRoute = PainelCardapioRouteImport.update({
+  id: '/cardapio',
+  path: '/cardapio',
+  getParentRoute: () => PainelRoute,
+} as any)
+const AdminUsuariosRoute = AdminUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRestaurantesRoute = AdminRestaurantesRouteImport.update({
+  id: '/restaurantes',
+  path: '/restaurantes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFinanceiroRoute = AdminFinanceiroRouteImport.update({
+  id: '/financeiro',
+  path: '/financeiro',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDestaquesRoute = AdminDestaquesRouteImport.update({
+  id: '/destaques',
+  path: '/destaques',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/buscar': typeof BuscarRoute
   '/cadastrar-restaurante': typeof CadastrarRestauranteRoute
   '/cadastro': typeof CadastroRoute
   '/favoritos': typeof FavoritosRoute
   '/login': typeof LoginRoute
-  '/painel': typeof PainelRoute
+  '/painel': typeof PainelRouteWithChildren
+  '/admin/destaques': typeof AdminDestaquesRoute
+  '/admin/financeiro': typeof AdminFinanceiroRoute
+  '/admin/restaurantes': typeof AdminRestaurantesRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/painel/cardapio': typeof PainelCardapioRoute
+  '/painel/destaque': typeof PainelDestaqueRoute
+  '/painel/financeiro': typeof PainelFinanceiroRoute
+  '/painel/perfil': typeof PainelPerfilRoute
+  '/painel/promocoes': typeof PainelPromocoesRoute
   '/restaurante/$slug': typeof RestauranteSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/buscar': typeof BuscarRoute
   '/cadastrar-restaurante': typeof CadastrarRestauranteRoute
   '/cadastro': typeof CadastroRoute
   '/favoritos': typeof FavoritosRoute
   '/login': typeof LoginRoute
-  '/painel': typeof PainelRoute
+  '/painel': typeof PainelRouteWithChildren
+  '/admin/destaques': typeof AdminDestaquesRoute
+  '/admin/financeiro': typeof AdminFinanceiroRoute
+  '/admin/restaurantes': typeof AdminRestaurantesRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/painel/cardapio': typeof PainelCardapioRoute
+  '/painel/destaque': typeof PainelDestaqueRoute
+  '/painel/financeiro': typeof PainelFinanceiroRoute
+  '/painel/perfil': typeof PainelPerfilRoute
+  '/painel/promocoes': typeof PainelPromocoesRoute
   '/restaurante/$slug': typeof RestauranteSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/buscar': typeof BuscarRoute
   '/cadastrar-restaurante': typeof CadastrarRestauranteRoute
   '/cadastro': typeof CadastroRoute
   '/favoritos': typeof FavoritosRoute
   '/login': typeof LoginRoute
-  '/painel': typeof PainelRoute
+  '/painel': typeof PainelRouteWithChildren
+  '/admin/destaques': typeof AdminDestaquesRoute
+  '/admin/financeiro': typeof AdminFinanceiroRoute
+  '/admin/restaurantes': typeof AdminRestaurantesRoute
+  '/admin/usuarios': typeof AdminUsuariosRoute
+  '/painel/cardapio': typeof PainelCardapioRoute
+  '/painel/destaque': typeof PainelDestaqueRoute
+  '/painel/financeiro': typeof PainelFinanceiroRoute
+  '/painel/perfil': typeof PainelPerfilRoute
+  '/painel/promocoes': typeof PainelPromocoesRoute
   '/restaurante/$slug': typeof RestauranteSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/buscar'
     | '/cadastrar-restaurante'
     | '/cadastro'
     | '/favoritos'
     | '/login'
     | '/painel'
+    | '/admin/destaques'
+    | '/admin/financeiro'
+    | '/admin/restaurantes'
+    | '/admin/usuarios'
+    | '/painel/cardapio'
+    | '/painel/destaque'
+    | '/painel/financeiro'
+    | '/painel/perfil'
+    | '/painel/promocoes'
     | '/restaurante/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/buscar'
     | '/cadastrar-restaurante'
     | '/cadastro'
     | '/favoritos'
     | '/login'
     | '/painel'
+    | '/admin/destaques'
+    | '/admin/financeiro'
+    | '/admin/restaurantes'
+    | '/admin/usuarios'
+    | '/painel/cardapio'
+    | '/painel/destaque'
+    | '/painel/financeiro'
+    | '/painel/perfil'
+    | '/painel/promocoes'
     | '/restaurante/$slug'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/buscar'
     | '/cadastrar-restaurante'
     | '/cadastro'
     | '/favoritos'
     | '/login'
     | '/painel'
+    | '/admin/destaques'
+    | '/admin/financeiro'
+    | '/admin/restaurantes'
+    | '/admin/usuarios'
+    | '/painel/cardapio'
+    | '/painel/destaque'
+    | '/painel/financeiro'
+    | '/painel/perfil'
+    | '/painel/promocoes'
     | '/restaurante/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   BuscarRoute: typeof BuscarRoute
   CadastrarRestauranteRoute: typeof CadastrarRestauranteRoute
   CadastroRoute: typeof CadastroRoute
   FavoritosRoute: typeof FavoritosRoute
   LoginRoute: typeof LoginRoute
-  PainelRoute: typeof PainelRoute
+  PainelRoute: typeof PainelRouteWithChildren
   RestauranteSlugRoute: typeof RestauranteSlugRoute
 }
 
@@ -178,6 +299,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BuscarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -192,17 +320,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RestauranteSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/painel/promocoes': {
+      id: '/painel/promocoes'
+      path: '/promocoes'
+      fullPath: '/painel/promocoes'
+      preLoaderRoute: typeof PainelPromocoesRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/perfil': {
+      id: '/painel/perfil'
+      path: '/perfil'
+      fullPath: '/painel/perfil'
+      preLoaderRoute: typeof PainelPerfilRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/financeiro': {
+      id: '/painel/financeiro'
+      path: '/financeiro'
+      fullPath: '/painel/financeiro'
+      preLoaderRoute: typeof PainelFinanceiroRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/destaque': {
+      id: '/painel/destaque'
+      path: '/destaque'
+      fullPath: '/painel/destaque'
+      preLoaderRoute: typeof PainelDestaqueRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/painel/cardapio': {
+      id: '/painel/cardapio'
+      path: '/cardapio'
+      fullPath: '/painel/cardapio'
+      preLoaderRoute: typeof PainelCardapioRouteImport
+      parentRoute: typeof PainelRoute
+    }
+    '/admin/usuarios': {
+      id: '/admin/usuarios'
+      path: '/usuarios'
+      fullPath: '/admin/usuarios'
+      preLoaderRoute: typeof AdminUsuariosRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/restaurantes': {
+      id: '/admin/restaurantes'
+      path: '/restaurantes'
+      fullPath: '/admin/restaurantes'
+      preLoaderRoute: typeof AdminRestaurantesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/financeiro': {
+      id: '/admin/financeiro'
+      path: '/financeiro'
+      fullPath: '/admin/financeiro'
+      preLoaderRoute: typeof AdminFinanceiroRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/destaques': {
+      id: '/admin/destaques'
+      path: '/destaques'
+      fullPath: '/admin/destaques'
+      preLoaderRoute: typeof AdminDestaquesRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminDestaquesRoute: typeof AdminDestaquesRoute
+  AdminFinanceiroRoute: typeof AdminFinanceiroRoute
+  AdminRestaurantesRoute: typeof AdminRestaurantesRoute
+  AdminUsuariosRoute: typeof AdminUsuariosRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminDestaquesRoute: AdminDestaquesRoute,
+  AdminFinanceiroRoute: AdminFinanceiroRoute,
+  AdminRestaurantesRoute: AdminRestaurantesRoute,
+  AdminUsuariosRoute: AdminUsuariosRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface PainelRouteChildren {
+  PainelCardapioRoute: typeof PainelCardapioRoute
+  PainelDestaqueRoute: typeof PainelDestaqueRoute
+  PainelFinanceiroRoute: typeof PainelFinanceiroRoute
+  PainelPerfilRoute: typeof PainelPerfilRoute
+  PainelPromocoesRoute: typeof PainelPromocoesRoute
+}
+
+const PainelRouteChildren: PainelRouteChildren = {
+  PainelCardapioRoute: PainelCardapioRoute,
+  PainelDestaqueRoute: PainelDestaqueRoute,
+  PainelFinanceiroRoute: PainelFinanceiroRoute,
+  PainelPerfilRoute: PainelPerfilRoute,
+  PainelPromocoesRoute: PainelPromocoesRoute,
+}
+
+const PainelRouteWithChildren =
+  PainelRoute._addFileChildren(PainelRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   BuscarRoute: BuscarRoute,
   CadastrarRestauranteRoute: CadastrarRestauranteRoute,
   CadastroRoute: CadastroRoute,
   FavoritosRoute: FavoritosRoute,
   LoginRoute: LoginRoute,
-  PainelRoute: PainelRoute,
+  PainelRoute: PainelRouteWithChildren,
   RestauranteSlugRoute: RestauranteSlugRoute,
 }
 export const routeTree = rootRouteImport
