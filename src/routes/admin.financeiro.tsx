@@ -46,7 +46,7 @@ function AdminFin() {
         {invoices?.map((i: any) => (
           <div key={i.id} className="flex items-center gap-3 rounded-lg border border-border/60 bg-card p-3 text-sm">
             <div className="flex-1"><p className="font-semibold">{i.restaurant?.name}</p><p className="text-xs text-muted-foreground">R$ {Number(i.amount).toFixed(2)} · vence {new Date(i.due_date).toLocaleDateString("pt-BR")}</p></div>
-            <Select value={i.status} onValueChange={(v) => setStatus(i.id, v)}>
+            <Select value={i.status} onValueChange={(v) => setStatus(i.id, v as "pending" | "paid" | "overdue")}>
               <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="pending">pending</SelectItem>
