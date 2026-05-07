@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PainelRouteImport } from './routes/painel'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as CadastroRouteImport } from './routes/cadastro'
@@ -17,6 +18,11 @@ import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RestauranteSlugRouteImport } from './routes/restaurante.$slug'
 
+const PainelRoute = PainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/cadastro': typeof CadastroRoute
   '/favoritos': typeof FavoritosRoute
   '/login': typeof LoginRoute
+  '/painel': typeof PainelRoute
   '/restaurante/$slug': typeof RestauranteSlugRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/cadastro': typeof CadastroRoute
   '/favoritos': typeof FavoritosRoute
   '/login': typeof LoginRoute
+  '/painel': typeof PainelRoute
   '/restaurante/$slug': typeof RestauranteSlugRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/cadastro': typeof CadastroRoute
   '/favoritos': typeof FavoritosRoute
   '/login': typeof LoginRoute
+  '/painel': typeof PainelRoute
   '/restaurante/$slug': typeof RestauranteSlugRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/favoritos'
     | '/login'
+    | '/painel'
     | '/restaurante/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/favoritos'
     | '/login'
+    | '/painel'
     | '/restaurante/$slug'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/favoritos'
     | '/login'
+    | '/painel'
     | '/restaurante/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -118,11 +130,19 @@ export interface RootRouteChildren {
   CadastroRoute: typeof CadastroRoute
   FavoritosRoute: typeof FavoritosRoute
   LoginRoute: typeof LoginRoute
+  PainelRoute: typeof PainelRoute
   RestauranteSlugRoute: typeof RestauranteSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/painel': {
+      id: '/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof PainelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   CadastroRoute: CadastroRoute,
   FavoritosRoute: FavoritosRoute,
   LoginRoute: LoginRoute,
+  PainelRoute: PainelRoute,
   RestauranteSlugRoute: RestauranteSlugRoute,
 }
 export const routeTree = rootRouteImport
