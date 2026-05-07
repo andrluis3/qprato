@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RestauranteSlugRouteImport } from './routes/restaurante.$slug'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -34,18 +35,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RestauranteSlugRoute = RestauranteSlugRouteImport.update({
+  id: '/restaurante/$slug',
+  path: '/restaurante/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/buscar': typeof BuscarRoute
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
+  '/restaurante/$slug': typeof RestauranteSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/buscar': typeof BuscarRoute
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
+  '/restaurante/$slug': typeof RestauranteSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,20 @@ export interface FileRoutesById {
   '/buscar': typeof BuscarRoute
   '/cadastro': typeof CadastroRoute
   '/login': typeof LoginRoute
+  '/restaurante/$slug': typeof RestauranteSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/buscar' | '/cadastro' | '/login'
+  fullPaths: '/' | '/buscar' | '/cadastro' | '/login' | '/restaurante/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/buscar' | '/cadastro' | '/login'
-  id: '__root__' | '/' | '/buscar' | '/cadastro' | '/login'
+  to: '/' | '/buscar' | '/cadastro' | '/login' | '/restaurante/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/buscar'
+    | '/cadastro'
+    | '/login'
+    | '/restaurante/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +82,7 @@ export interface RootRouteChildren {
   BuscarRoute: typeof BuscarRoute
   CadastroRoute: typeof CadastroRoute
   LoginRoute: typeof LoginRoute
+  RestauranteSlugRoute: typeof RestauranteSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +115,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/restaurante/$slug': {
+      id: '/restaurante/$slug'
+      path: '/restaurante/$slug'
+      fullPath: '/restaurante/$slug'
+      preLoaderRoute: typeof RestauranteSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +130,7 @@ const rootRouteChildren: RootRouteChildren = {
   BuscarRoute: BuscarRoute,
   CadastroRoute: CadastroRoute,
   LoginRoute: LoginRoute,
+  RestauranteSlugRoute: RestauranteSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
