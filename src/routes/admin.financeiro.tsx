@@ -25,7 +25,7 @@ function AdminFin() {
     setF({ restaurant_id: "", amount: "", due_date: "" });
     qc.invalidateQueries({ queryKey: ["all-invoices"] });
   };
-  const setStatus = async (id: string, status: string) => {
+  const setStatus = async (id: string, status: "pending" | "paid" | "overdue") => {
     await supabase.from("invoices").update({ status }).eq("id", id);
     qc.invalidateQueries({ queryKey: ["all-invoices"] });
   };
