@@ -23,6 +23,7 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const navigate = useNavigate();
   const [q, setQ] = useState("");
+  const city = useUserCity();
 
   const { data: categories } = useQuery({
     queryKey: ["categories"],
