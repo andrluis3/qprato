@@ -1,85 +1,39 @@
+## Objetivo
 
-# QPrato — Guia Gastronômico
+Na home (`src/routes/index.tsx`), substituir a palavra fixa "cidade" no título "Descubra os melhores sabores da cidade" pelo nome da cidade onde o usuário está localizado.
 
-Plataforma com 3 ambientes (usuário final, restaurante, admin), backend Lovable Cloud (Supabase), busca com mapa e tema dark inspirado no iFood.
+## Comportamento
 
-## Stack e decisões
+- Ao carregar a home, solicitar a geolocalização do navegador (`navigator.geolocation.getCurrentPosition`).
+- Fazer reverse geocoding usando a API do Mapbox (token `VITE_MAPBOX_TOKEN` já configurado) para obter o nome da cidade a partir de lat/lng.
+- Exibir dinamicamente: "Descubra os melhores sabores de **{Cidade}**".
+- Estados de fallback:
+  - Enquanto carrega: mantém "da cidade" (ou um skeleton sutil no nome).
+  - Permissão negada / erro / sem suporte: mantém "da cidade" como está hoje.
+- Persistir a cidade detectada em `localStorage` (`qprato:city`) para evitar pedir geolocalização a cada visita e mostrar instantaneamente nas próximas.
 
-- **Backend:** Lovable Cloud (auth e-mail/senha + Google, banco, storage de imagens, RLS).
-- **Mapa:** Mapbox GL JS — pediremos a chave pública (`VITE_MAPBOX_TOKEN`) via secret no momento da implementação.
-- **Pagamento de destaque:** mock (botão cria pedido `pending`, admin aprova).
-- **Design:** tema dark, vermelho/laranja vibrante como accent (estilo iFood), totalmente responsivo, tokens em `src/styles.css` (oklch).
+## Implementação técnica
 
-## Modelo de dados (Supabase)
+Arquivo único alterado: `src/routes/index.tsx`.
 
-- `profiles` — id (=auth.users), nome, avatar, telefone.
-- `user_roles` — (user_id, role: `admin` | `restaurant` | `user`) + função `has_role`.
-- `restaurants` — owner_id, nome, slug, descrição, categoria, cidade, endereço, lat/lng, telefone, horário, capa, logo, status (`pending`|`active`|`disabled`), inadimplente (bool), destaque_até (timestamp).
-- `categories` — nome, ícone (pizza, hamburger, japonês, etc.).
-- `menu_items` — restaurant_id, nome, descrição, preço, imagem, categoria, ativo.
-- `promotions` — restaurant_id, título, descrição, desconto, válido_até, imagem, ativo.
-- `favorites` — user_id, restaurant_id.
-- `reviews` — user_id, restaurant_id, nota (1-5), comentário.
-- `featured_orders` — restaurant_id, plano, valor, dias, status (`pending`|`approved`|`rejected`), criado_em.
-- `invoices` — restaurant_id, valor, vencimento, status (`paid`|`pending`|`overdue`).
-- **Storage buckets:** `restaurant-images`, `menu-images`, `promo-images` (públicos para leitura).
-- **RLS:** leitura pública de restaurantes `active`, escrita restrita ao owner; admin via `has_role`.
+1. Novo hook local `useUserCity()` dentro do arquivo (ou em `src/hooks/use-user-city.ts` se preferir reutilizar):
+   - Lê cache do `localStorage`.
+   - Se vazio, chama `navigator.geolocation.getCurrentPosition`.
+   - Faz `fetch` em `https://api.mapbox.com/geocoding/v5/mapbox.places/{lng},{lat}.json?access_token={VITE_MAPBOX_TOKEN}&types=place&language=pt`.
+   - Extrai `features[0].text` (nome da cidade) e salva no cache.
+   - Retorna `{ city: string | null, loading: boolean }`.
 
-## Rotas (TanStack Start)
+2. No `HomePage`, no `<h1>`, trocar:
+   ```
+   ...sabores</span> da cidade
+   ```
+   por:
+   ```
+   ...sabores</span> de {city ?? "sua cidade"}
+   ```
+   (mantendo o gradiente apenas em "sabores", como hoje).
 
-**Público / usuário:**
-- `/` — home com busca, categorias, restaurantes em destaque, promoções.
-- `/buscar` — lista + mapa (Mapbox), filtros por categoria/cidade/texto/raio.
-- `/restaurante/$slug` — perfil, cardápio, promoções, avaliações, botão favoritar.
-- `/favoritos` — protegida.
-- `/login`, `/cadastro`.
+## Fora de escopo
 
-**Restaurante (`/_restaurant/...`):**
-- `/painel` — visão geral (visitas, favoritos, avaliações, status destaque).
-- `/painel/perfil` — edição (inclui localização no mapa).
-- `/painel/cardapio` — CRUD de produtos com upload.
-- `/painel/promocoes` — CRUD de promoções.
-- `/painel/destaque` — escolher plano e "comprar" (mock).
-- `/painel/financeiro` — faturas e status de inadimplência.
-
-**Admin (`/_admin/...`):**
-- `/admin` — dashboard.
-- `/admin/restaurantes` — aprovar pendentes, ativar/desativar.
-- `/admin/destaques` — aprovar pedidos de destaque.
-- `/admin/financeiro` — marcar inadimplência, gerar faturas.
-- `/admin/usuarios` — gerenciar papéis.
-
-Guarda de rotas via layouts `_authenticated`, `_restaurant` e `_admin` com `beforeLoad` checando `has_role`.
-
-## Componentes principais
-
-- `AppHeader` (logo QPrato, busca, login/avatar).
-- `RestaurantCard`, `CategoryChip`, `PromoCard`, `MenuItemCard`, `ReviewItem`, `RatingStars`.
-- `MapView` (Mapbox) com pins clicáveis.
-- `ImageUploader` (Supabase Storage).
-- Sidebar nos painéis restaurante/admin (shadcn `Sidebar`, colapsável).
-
-## Design system
-
-- Dark padrão, sem toggle (foco mobile-first).
-- Tokens em `src/styles.css`:
-  - `--background` ~ oklch(0.16 0.01 20)
-  - `--primary` vermelho QPrato ~ oklch(0.62 0.22 25), `--primary-glow` laranja
-  - `--accent` amarelo quente para badges de destaque/promo
-  - gradientes `--gradient-primary`, sombras `--shadow-elegant`
-- Tipografia: display "Sora" + body "Inter" (Google Fonts).
-- Animações suaves com framer-motion na home.
-
-## Entrega em ordem
-
-1. Habilitar Lovable Cloud, criar tabelas, RLS, buckets, seed de categorias e ~6 restaurantes demo.
-2. Design system dark + layout base + auth (e-mail/senha + Google).
-3. Área usuário: home, busca com mapa, perfil do restaurante, favoritos, avaliações.
-4. Área restaurante: painel, perfil, cardápio, promoções, destaque (mock), financeiro (visualização).
-5. Área admin: aprovações, ativar/desativar, destaques, inadimplência, papéis.
-6. Polimento responsivo + SEO por rota.
-
-## O que precisarei de você durante a build
-
-- Token público do Mapbox (`VITE_MAPBOX_TOKEN`) — peço via secret quando chegar na etapa do mapa.
-- Confirmação para habilitar Lovable Cloud no início.
+- Não alterar a busca/filtros por cidade (continua igual).
+- Não pedir cidade manualmente via UI nesta etapa — apenas geolocalização automática com fallback.
