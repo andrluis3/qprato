@@ -74,7 +74,7 @@ function HomePage() {
               <Sparkles className="h-3 w-3 text-accent" /> Guia gastronômico
             </div>
             <h1 className="font-display text-5xl font-bold leading-tight md:text-7xl">
-              Descubra os melhores <span className="text-gradient-primary">sabores</span> da cidade
+              Descubra os melhores <span className="text-gradient-primary">sabores</span> de {city ?? "sua cidade"}
             </h1>
             <p className="mt-4 max-w-xl text-lg text-muted-foreground">
               Cardápios, promoções e avaliações de restaurantes selecionados — tudo em um só lugar.
