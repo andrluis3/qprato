@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Search, Sparkles, MapPin, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useUserCity } from "@/hooks/use-user-city";
 import { AppHeader } from "@/components/AppHeader";
 import { RestaurantCard } from "@/components/RestaurantCard";
 import { Button } from "@/components/ui/button";
