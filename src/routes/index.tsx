@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Search, Sparkles, MapPin, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -75,7 +75,21 @@ function HomePage() {
               <Sparkles className="h-3 w-3 text-accent" /> Guia gastronômico
             </div>
             <h1 className="font-display text-5xl font-bold leading-tight md:text-7xl">
-              Descubra os melhores <span className="text-gradient-primary">sabores</span> de {city ?? "sua cidade"}
+              Descubra os melhores <span className="text-gradient-primary">sabores</span> de{" "}
+              <span className="relative inline-block align-baseline">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={city ?? "fallback"}
+                    initial={{ opacity: 0, filter: "blur(12px)" }}
+                    animate={{ opacity: 1, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, filter: "blur(12px)" }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="inline-block"
+                  >
+                    {city ?? "sua cidade"}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
             </h1>
             {status === "error" && !city && (
               <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
