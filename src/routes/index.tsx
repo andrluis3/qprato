@@ -23,7 +23,7 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const navigate = useNavigate();
   const [q, setQ] = useState("");
-  const city = useUserCity();
+  const { city, status, retry } = useUserCity();
 
   const { data: categories } = useQuery({
     queryKey: ["categories"],
@@ -77,6 +77,14 @@ function HomePage() {
             <h1 className="font-display text-5xl font-bold leading-tight md:text-7xl">
               Descubra os melhores <span className="text-gradient-primary">sabores</span> de {city ?? "sua cidade"}
             </h1>
+            {status === "error" && !city && (
+              <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+                <span>Não conseguimos detectar sua cidade.</span>
+                <Button type="button" size="sm" variant="outline" onClick={retry}>
+                  <MapPin className="h-3.5 w-3.5" /> Tentar novamente
+                </Button>
+              </div>
+            )}
             <p className="mt-4 max-w-xl text-lg text-muted-foreground">
               Cardápios, promoções e avaliações de restaurantes selecionados — tudo em um só lugar.
             </p>
