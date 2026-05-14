@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Search, Sparkles, MapPin, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useUserCity } from "@/hooks/use-user-city";
 import { AppHeader } from "@/components/AppHeader";
 import { RestaurantCard } from "@/components/RestaurantCard";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const navigate = useNavigate();
   const [q, setQ] = useState("");
+  const city = useUserCity();
 
   const { data: categories } = useQuery({
     queryKey: ["categories"],
@@ -73,7 +75,7 @@ function HomePage() {
               <Sparkles className="h-3 w-3 text-accent" /> Guia gastronômico
             </div>
             <h1 className="font-display text-5xl font-bold leading-tight md:text-7xl">
-              Descubra os melhores <span className="text-gradient-primary">sabores</span> da cidade
+              Descubra os melhores <span className="text-gradient-primary">sabores</span> de {city ?? "sua cidade"}
             </h1>
             <p className="mt-4 max-w-xl text-lg text-muted-foreground">
               Cardápios, promoções e avaliações de restaurantes selecionados — tudo em um só lugar.
