@@ -5,6 +5,7 @@ import { Search, Sparkles, MapPin, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useUserCity } from "@/hooks/use-user-city";
+import heroBg from "@/assets/hero-bg.png";
 import { AppHeader } from "@/components/AppHeader";
 import { RestaurantCard } from "@/components/RestaurantCard";
 import { Button } from "@/components/ui/button";
