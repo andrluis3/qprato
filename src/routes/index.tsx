@@ -68,7 +68,12 @@ function HomePage() {
       <AppHeader />
 
       {/* HERO */}
-      <section className="relative overflow-hidden">
+      <section className="relative w-full overflow-hidden min-h-screen">
+        <div
+          className="absolute inset-0 -z-10 bg-center bg-no-repeat bg-cover blur-[2px] scale-105"
+          style={{ backgroundImage: `url(${heroBg})` }}
+        />
+        <div className="absolute inset-0 -z-10 bg-background/55" />
         <div className="absolute inset-0 -z-10" style={{ background: "var(--gradient-hero)" }} />
         <div className="mx-auto max-w-7xl px-4 py-16 md:py-24">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl">
