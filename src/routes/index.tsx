@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Sparkles, MapPin, ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useUserCity } from "@/hooks/use-user-city";
 import heroBg from "@/assets/hero-bg.png";
@@ -26,6 +26,14 @@ function HomePage() {
   const [q, setQ] = useState("");
   const { city, status, retry } = useUserCity();
 
+  const rotatingWords = ["pratos", "temperos", "aromas", "ingredientes", "petiscos", "sabores"];
+  const [wordIndex, setWordIndex] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setWordIndex((i) => (i + 1) % rotatingWords.length);
+    }, 5000);
+    return () => clearInterval(id);
+  }, []);
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => (await supabase.from("categories").select("*").order("name")).data ?? [],
@@ -81,7 +89,22 @@ function HomePage() {
               <Sparkles className="h-3 w-3 text-accent" /> Guia gastronômico
             </div>
             <h1 className="font-display text-5xl font-bold leading-tight md:text-7xl">
-              Descubra os melhores <span className="text-gradient-primary">sabores</span> de{" "}
+              Descubra os melhores{" "}
+              <span className="relative inline-block align-baseline">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={rotatingWords[wordIndex]}
+                    initial={{ opacity: 0, filter: "blur(12px)" }}
+                    animate={{ opacity: 1, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, filter: "blur(12px)" }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="text-gradient-primary inline-block"
+                  >
+                    {rotatingWords[wordIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>{" "}
+              de{" "}
               <span className="relative inline-block align-baseline">
                 <AnimatePresence mode="wait">
                   <motion.span
