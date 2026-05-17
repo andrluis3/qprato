@@ -26,7 +26,7 @@ function HomePage() {
   const [q, setQ] = useState("");
   const { city, status, retry } = useUserCity();
 
-  const rotatingWords = ["pratos", "temperos", "aromas", "ingredientes", "petiscos", "sabores"];
+  const rotatingWords = ["pratos", "temperos", "aromas", "petiscos", "sabores"];
   const [wordIndex, setWordIndex] = useState(0);
   useEffect(() => {
     const id = setInterval(() => {
@@ -88,6 +88,25 @@ function HomePage() {
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-3 py-1 text-xs backdrop-blur">
               <Sparkles className="h-3 w-3 text-accent" /> Guia gastronômico
             </div>
+            <motion.form
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              onSubmit={(e) => { e.preventDefault(); navigate({ to: "/buscar", search: { q } as any }); }}
+              className="mb-8 flex w-full max-w-3xl items-center gap-2 rounded-2xl border-2 border-primary/30 bg-card/95 p-3 shadow-elegant ring-4 ring-primary/10 backdrop-blur md:gap-3 md:p-4"
+            >
+              <Search className="ml-2 h-6 w-6 shrink-0 text-primary md:h-7 md:w-7" />
+              <Input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Pizza, hambúrguer, restaurante japonês..."
+                className="h-12 border-0 bg-transparent text-base shadow-none focus-visible:ring-0 md:h-14 md:text-lg"
+              />
+              <Button type="submit" size="lg" className="h-12 shrink-0 bg-gradient-primary px-6 text-white shadow-elegant md:h-14 md:px-8 md:text-base">
+                <Search className="h-4 w-4 md:hidden" />
+                <span className="hidden md:inline">Buscar</span>
+              </Button>
+            </motion.form>
             <h1 className="font-display text-5xl font-bold leading-tight md:text-7xl">
               Descubra os melhores{" "}
               <span className="relative inline-block align-baseline">
@@ -131,25 +150,6 @@ function HomePage() {
             <p className="mt-4 max-w-xl text-lg text-muted-foreground">
               Cardápios, promoções e avaliações de restaurantes selecionados — tudo em um só lugar.
             </p>
-            <motion.form
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              onSubmit={(e) => { e.preventDefault(); navigate({ to: "/buscar", search: { q } as any }); }}
-              className="mt-10 flex w-full max-w-3xl items-center gap-2 rounded-2xl border-2 border-primary/30 bg-card/95 p-3 shadow-elegant ring-4 ring-primary/10 backdrop-blur md:gap-3 md:p-4"
-            >
-              <Search className="ml-2 h-6 w-6 shrink-0 text-primary md:h-7 md:w-7" />
-              <Input
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Pizza, hambúrguer, restaurante japonês..."
-                className="h-12 border-0 bg-transparent text-base shadow-none focus-visible:ring-0 md:h-14 md:text-lg"
-              />
-              <Button type="submit" size="lg" className="h-12 shrink-0 bg-gradient-primary px-6 text-white shadow-elegant md:h-14 md:px-8 md:text-base">
-                <Search className="h-4 w-4 md:hidden" />
-                <span className="hidden md:inline">Buscar</span>
-              </Button>
-            </motion.form>
           </motion.div>
         </div>
       </section>
