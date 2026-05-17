@@ -26,6 +26,14 @@ function HomePage() {
   const [q, setQ] = useState("");
   const { city, status, retry } = useUserCity();
 
+  const rotatingWords = ["pratos", "temperos", "aromas", "ingredientes", "petiscos", "sabores"];
+  const [wordIndex, setWordIndex] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setWordIndex((i) => (i + 1) % rotatingWords.length);
+    }, 5000);
+    return () => clearInterval(id);
+  }, []);
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => (await supabase.from("categories").select("*").order("name")).data ?? [],
