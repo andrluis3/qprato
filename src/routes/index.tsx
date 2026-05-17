@@ -89,7 +89,22 @@ function HomePage() {
               <Sparkles className="h-3 w-3 text-accent" /> Guia gastronômico
             </div>
             <h1 className="font-display text-5xl font-bold leading-tight md:text-7xl">
-              Descubra os melhores <span className="text-gradient-primary">sabores</span> de{" "}
+              Descubra os melhores{" "}
+              <span className="relative inline-block align-baseline">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={rotatingWords[wordIndex]}
+                    initial={{ opacity: 0, filter: "blur(12px)" }}
+                    animate={{ opacity: 1, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, filter: "blur(12px)" }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="text-gradient-primary inline-block"
+                  >
+                    {rotatingWords[wordIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>{" "}
+              de{" "}
               <span className="relative inline-block align-baseline">
                 <AnimatePresence mode="wait">
                   <motion.span
