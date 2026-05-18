@@ -268,6 +268,7 @@ export type Database = {
           delinquent: boolean
           description: string | null
           featured_until: string | null
+          google_place_id: string | null
           hours: string | null
           id: string
           lat: number | null
@@ -289,6 +290,7 @@ export type Database = {
           delinquent?: boolean
           description?: string | null
           featured_until?: string | null
+          google_place_id?: string | null
           hours?: string | null
           id?: string
           lat?: number | null
@@ -310,6 +312,7 @@ export type Database = {
           delinquent?: boolean
           description?: string | null
           featured_until?: string | null
+          google_place_id?: string | null
           hours?: string | null
           id?: string
           lat?: number | null
