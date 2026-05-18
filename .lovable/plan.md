@@ -1,39 +1,60 @@
+# Importar restaurantes do Google Maps (Admin)
+
 ## Objetivo
+Adicionar no painel admin uma tela que, a partir de uma cidade informada, busca todos os restaurantes daquela cidade no Google Maps e grava/atualiza diretamente na tabela `restaurants` do banco.
 
-Na home (`src/routes/index.tsx`), substituir a palavra fixa "cidade" no título "Descubra os melhores sabores da cidade" pelo nome da cidade onde o usuário está localizado.
+## Fluxo do usuário
+1. Admin acessa **Admin → Importar do Google Maps**.
+2. Digita o nome da cidade (ex.: "Curitiba, PR") e clica em **Buscar restaurantes**.
+3. A plataforma busca via Google Places (New) e mostra prévia: nome, endereço, telefone, total encontrado.
+4. Admin clica **Importar todos** (ou seleciona itens) → registros são gravados como `status = pending` para aprovação posterior na tela já existente de "Restaurantes".
+5. Toast com resumo: X criados, Y atualizados, Z ignorados.
 
-## Comportamento
+## Decisões confirmadas
+- **owner_id**: id do próprio admin que dispara a importação.
+- **Duplicados**: identificados pelo `google_place_id`; se já existir, **atualiza** (nome, endereço, telefone, lat/lng, cidade).
+- **Schema**: adicionar coluna `google_place_id text UNIQUE` em `restaurants`.
+- **Status inicial**: `pending` (admin aprova depois no fluxo já existente).
 
-- Ao carregar a home, solicitar a geolocalização do navegador (`navigator.geolocation.getCurrentPosition`).
-- Fazer reverse geocoding usando a API do Mapbox (token `VITE_MAPBOX_TOKEN` já configurado) para obter o nome da cidade a partir de lat/lng.
-- Exibir dinamicamente: "Descubra os melhores sabores de **{Cidade}**".
-- Estados de fallback:
-  - Enquanto carrega: mantém "da cidade" (ou um skeleton sutil no nome).
-  - Permissão negada / erro / sem suporte: mantém "da cidade" como está hoje.
-- Persistir a cidade detectada em `localStorage` (`qprato:city`) para evitar pedir geolocalização a cada visita e mostrar instantaneamente nas próximas.
+## Mudanças técnicas
 
-## Implementação técnica
+### 1. Banco (migração)
+- `ALTER TABLE restaurants ADD COLUMN google_place_id text UNIQUE`.
+- Índice já vem com UNIQUE.
+- Sem mudança de RLS (admin já tem acesso via políticas existentes).
 
-Arquivo único alterado: `src/routes/index.tsx`.
+### 2. Conector Google Maps
+- Usar conector **Google Maps Platform** (gateway Lovable) já documentado no projeto.
+- Endpoint: `places/v1/places:searchText` (Places API New) com paginação via `pageToken` até esgotar.
+- Campos solicitados (FieldMask): `places.id, places.displayName, places.formattedAddress, places.location, places.nationalPhoneNumber, places.websiteUri, places.types, nextPageToken`.
+- Query: `restaurantes em <cidade>` + filtro `includedType: "restaurant"`.
 
-1. Novo hook local `useUserCity()` dentro do arquivo (ou em `src/hooks/use-user-city.ts` se preferir reutilizar):
-   - Lê cache do `localStorage`.
-   - Se vazio, chama `navigator.geolocation.getCurrentPosition`.
-   - Faz `fetch` em `https://api.mapbox.com/geocoding/v5/mapbox.places/{lng},{lat}.json?access_token={VITE_MAPBOX_TOKEN}&types=place&language=pt`.
-   - Extrai `features[0].text` (nome da cidade) e salva no cache.
-   - Retorna `{ city: string | null, loading: boolean }`.
+### 3. Server function (TanStack)
+Arquivo: `src/lib/admin-import.functions.ts`
+- `importRestaurantsFromGoogle` — `createServerFn({ method: "POST" })` com `requireSupabaseAuth`.
+- Valida com Zod: `{ city: string (min 2) }`.
+- Verifica se o usuário é admin via `has_role` (RPC) — bloqueia se não for.
+- Faz loop de paginação no gateway Google Maps (máx ~60 resultados por busca, limite do Places).
+- Para cada lugar:
+  - Faz `upsert` em `restaurants` usando `onConflict: "google_place_id"`.
+  - Gera `slug` a partir do nome + sufixo curto do place_id para garantir unicidade.
+  - Define `owner_id = userId do admin`, `status = 'pending'`, `city`, `address`, `lat/lng`, `phone`.
+- Retorna `{ created, updated, total, errors }`.
 
-2. No `HomePage`, no `<h1>`, trocar:
-   ```
-   ...sabores</span> da cidade
-   ```
-   por:
-   ```
-   ...sabores</span> de {city ?? "sua cidade"}
-   ```
-   (mantendo o gradiente apenas em "sabores", como hoje).
+### 4. UI (rota)
+Arquivo: `src/routes/admin.importar.tsx`
+- Input de cidade + botão "Buscar e importar".
+- Loading state, resultado em lista, resumo final.
+- Link para a tela já existente `admin/restaurantes` para aprovar os pendentes.
+- Adicionar entrada no menu/nav do admin existente.
+
+## Detalhes técnicos
+- Chamada ao gateway: `https://connector-gateway.lovable.dev/google_maps/places/v1/places:searchText` com headers `Authorization: Bearer $LOVABLE_API_KEY` e `X-Connection-Api-Key: $GOOGLE_MAPS_API_KEY` (lidos via `process.env` dentro do `.handler()`).
+- Pré-requisito: usuário precisa conectar **Google Maps Platform** em Conectores antes de usar a funcionalidade. Se a chave não estiver presente, a server fn retorna mensagem clara orientando a conexão.
+- Slug: `slugify(name) + '-' + placeId.slice(-6)` para evitar colisões.
+- `category_id` fica null nesta importação (admin pode classificar depois).
 
 ## Fora de escopo
-
-- Não alterar a busca/filtros por cidade (continua igual).
-- Não pedir cidade manualmente via UI nesta etapa — apenas geolocalização automática com fallback.
+- Importação automática agendada (cron).
+- Importação de cardápio/fotos do Google.
+- Geocoding manual — usamos lat/lng já retornados pelo Places.
