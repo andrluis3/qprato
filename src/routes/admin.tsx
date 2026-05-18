@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { Shield, Store, Sparkles, Receipt, Users } from "lucide-react";
+import { Shield, Store, Sparkles, Receipt, Users, Download } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { AppHeader } from "@/components/AppHeader";
 
@@ -9,6 +9,7 @@ export const Route = createFileRoute("/admin")({ component: AdminLayout });
 const links = [
   { to: "/admin", label: "Dashboard", icon: Shield, exact: true },
   { to: "/admin/restaurantes", label: "Restaurantes", icon: Store },
+  { to: "/admin/importar", label: "Importar Google Maps", icon: Download },
   { to: "/admin/destaques", label: "Destaques", icon: Sparkles },
   { to: "/admin/financeiro", label: "Financeiro", icon: Receipt },
   { to: "/admin/usuarios", label: "Usuários", icon: Users },
