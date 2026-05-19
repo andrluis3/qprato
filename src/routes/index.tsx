@@ -26,7 +26,7 @@ function HomePage() {
   const [q, setQ] = useState("");
   const { city, status, retry } = useUserCity();
 
-  const rotatingWords = ["pratos", "temperos", "aromas", "petiscos", "sabores"];
+  const rotatingWords = ["pratos", "temperos", "aromas", "petiscos", "sabores", "restaurantes", "bares", "opções"];
   const [wordIndex, setWordIndex] = useState(0);
   useEffect(() => {
     const id = setInterval(() => {
