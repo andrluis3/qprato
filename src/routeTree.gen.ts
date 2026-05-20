@@ -25,6 +25,7 @@ import { Route as PainelDestaqueRouteImport } from './routes/painel.destaque'
 import { Route as PainelCardapioRouteImport } from './routes/painel.cardapio'
 import { Route as AdminUsuariosRouteImport } from './routes/admin.usuarios'
 import { Route as AdminRestaurantesRouteImport } from './routes/admin.restaurantes'
+import { Route as AdminImportarRouteImport } from './routes/admin.importar'
 import { Route as AdminFinanceiroRouteImport } from './routes/admin.financeiro'
 import { Route as AdminDestaquesRouteImport } from './routes/admin.destaques'
 
@@ -108,6 +109,11 @@ const AdminRestaurantesRoute = AdminRestaurantesRouteImport.update({
   path: '/restaurantes',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminImportarRoute = AdminImportarRouteImport.update({
+  id: '/importar',
+  path: '/importar',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminFinanceiroRoute = AdminFinanceiroRouteImport.update({
   id: '/financeiro',
   path: '/financeiro',
@@ -130,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/painel': typeof PainelRouteWithChildren
   '/admin/destaques': typeof AdminDestaquesRoute
   '/admin/financeiro': typeof AdminFinanceiroRoute
+  '/admin/importar': typeof AdminImportarRoute
   '/admin/restaurantes': typeof AdminRestaurantesRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/painel/cardapio': typeof PainelCardapioRoute
@@ -150,6 +157,7 @@ export interface FileRoutesByTo {
   '/painel': typeof PainelRouteWithChildren
   '/admin/destaques': typeof AdminDestaquesRoute
   '/admin/financeiro': typeof AdminFinanceiroRoute
+  '/admin/importar': typeof AdminImportarRoute
   '/admin/restaurantes': typeof AdminRestaurantesRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/painel/cardapio': typeof PainelCardapioRoute
@@ -171,6 +179,7 @@ export interface FileRoutesById {
   '/painel': typeof PainelRouteWithChildren
   '/admin/destaques': typeof AdminDestaquesRoute
   '/admin/financeiro': typeof AdminFinanceiroRoute
+  '/admin/importar': typeof AdminImportarRoute
   '/admin/restaurantes': typeof AdminRestaurantesRoute
   '/admin/usuarios': typeof AdminUsuariosRoute
   '/painel/cardapio': typeof PainelCardapioRoute
@@ -193,6 +202,7 @@ export interface FileRouteTypes {
     | '/painel'
     | '/admin/destaques'
     | '/admin/financeiro'
+    | '/admin/importar'
     | '/admin/restaurantes'
     | '/admin/usuarios'
     | '/painel/cardapio'
@@ -213,6 +223,7 @@ export interface FileRouteTypes {
     | '/painel'
     | '/admin/destaques'
     | '/admin/financeiro'
+    | '/admin/importar'
     | '/admin/restaurantes'
     | '/admin/usuarios'
     | '/painel/cardapio'
@@ -233,6 +244,7 @@ export interface FileRouteTypes {
     | '/painel'
     | '/admin/destaques'
     | '/admin/financeiro'
+    | '/admin/importar'
     | '/admin/restaurantes'
     | '/admin/usuarios'
     | '/painel/cardapio'
@@ -369,6 +381,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRestaurantesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/importar': {
+      id: '/admin/importar'
+      path: '/importar'
+      fullPath: '/admin/importar'
+      preLoaderRoute: typeof AdminImportarRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/financeiro': {
       id: '/admin/financeiro'
       path: '/financeiro'
@@ -389,6 +408,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminDestaquesRoute: typeof AdminDestaquesRoute
   AdminFinanceiroRoute: typeof AdminFinanceiroRoute
+  AdminImportarRoute: typeof AdminImportarRoute
   AdminRestaurantesRoute: typeof AdminRestaurantesRoute
   AdminUsuariosRoute: typeof AdminUsuariosRoute
 }
@@ -396,6 +416,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminDestaquesRoute: AdminDestaquesRoute,
   AdminFinanceiroRoute: AdminFinanceiroRoute,
+  AdminImportarRoute: AdminImportarRoute,
   AdminRestaurantesRoute: AdminRestaurantesRoute,
   AdminUsuariosRoute: AdminUsuariosRoute,
 }
@@ -435,3 +456,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
